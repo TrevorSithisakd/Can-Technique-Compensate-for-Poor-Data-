@@ -9,5 +9,5 @@ Research question & hypotheses
 
 On 5-day-ahead returns for large-cap US equities (2018–2024), how does forecast skill measured by the Information Coefficient (IC) scale with model
 complexity, feature richness, and data quantity?
-- **H1** Mean cross-sectional IC is statistically indistinguishable from 0 across
+- **H1.** Mean cross-sectional IC is statistically indistinguishable from 0 across
 every configuration.
