@@ -10,13 +10,14 @@ import hashlib
 
 # from config import the ticker list to see what needs to be downloaded 
 CACHE_DIR   = "./cache"
-# wouldnt this only work for load prices or prices right now
+
+TICKERS = ["AAPL", "NVDA"]
 def _cache_file() -> str:
     # Ticker universe baked into cached file to save on duplicate recomputation
     key = ",".join(sorted(TICKERS)) + START_DATE + END_DATE
     tag = hashlib.md5(key.encode()).hexdigest()[:8]
     return os.path.join(CACHE_DIR, f"prices_{tag}.csv")
-# load prices 
+
 def load_prices() -> pd.DataFrame:
     # check if cache exists 
     path = _cache_file() # gets current associated file path if it exists by checking what corresponding id it would be from the hash encoding
@@ -30,9 +31,24 @@ def load_prices() -> pd.DataFrame:
     raw.to_csv(path)
 
     return raw
-# load spy 
 
-# extract close
+def load_close() -> pd.DataFrame:
+    # close prices for whole universe dates + tickers 
+    raw = load_prices()
+    tickers = raw.columns.get_level_values(1).unique()
+    return pd.concat([_extract_close(raw, t) for t in tickers], axis=1)
+
+def _extract_close(raw, ticker_symbol: str) -> pd.Series:
+    """Helper to pull a single close series from a yfinance multi or single download."""
+    if isinstance(raw.columns, pd.MultiIndex):
+        close = raw["Close"][ticker_symbol]
+    else:
+        close = raw["Close"]
+    if isinstance(close, pd.DataFrame):
+        close = close.iloc[:, 0]
+    return close.rename(ticker_symbol)
+
+# load spy 
 
 # load macro data 
 
