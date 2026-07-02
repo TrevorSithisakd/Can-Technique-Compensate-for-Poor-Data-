@@ -11,7 +11,6 @@ import hashlib
 # from config import the ticker list to see what needs to be downloaded 
 CACHE_DIR   = "./cache"
 
-TICKERS = ["AAPL", "NVDA"]
 def _cache_file() -> str:
     # Ticker universe baked into cached file to save on duplicate recomputation
     key = ",".join(sorted(TICKERS)) + START_DATE + END_DATE
